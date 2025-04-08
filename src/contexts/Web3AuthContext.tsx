@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { Web3Auth } from '@web3auth/modal';
-import { CHAIN_NAMESPACES, IProvider } from '@web3auth/base';
+import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK } from '@web3auth/base';
 import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider';
 import { ethers } from 'ethers';
 import { HealthDAOGovernance, DAOToken } from '../contracts/HealthDAOGovernance';
@@ -40,14 +40,20 @@ const Web3AuthContext = createContext<Web3AuthContextType>({
 });
 
 // Contract addresses - these would be set based on the deployed contracts
-const HEALTH_DAO_CONTRACT_ADDRESS = '0x0000000000000000000000000000000000000000'; // Replace with actual address
-
+const HEALTH_DAO_CONTRACT_ADDRESS =process.env.NEXT_PUBLIC_DAO_CONTRACT_ADDRESS; // Replace with actual address
+console.log(HEALTH_DAO_CONTRACT_ADDRESS)
 // Web3Auth configuration
-const clientId = 'YOUR_WEB3AUTH_CLIENT_ID'; // Replace with your Web3Auth client ID
+const clientId = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID; // Replace with your Web3Auth client ID
 const chainConfig = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,
-  chainId: '0x1', // Ethereum mainnet (use appropriate chain ID for your deployment)
-  rpcTarget: 'https://rpc.ankr.com/eth', // RPC endpoint
+  chainId: process.env.NEXT_PUBLIC_CHAIN_ID, // Ethereum mainnet (use appropriate chain ID for your deployment)
+  rpcTarget: process.env.NEXT_PUBLIC_RPC_URL, // RPC endpoint
+  displayName: "Akave Testnet",
+  blockExplorerUrl: "http://explorer.akave.ai/",
+  ticker: "AKVT",
+  tickerName: "AKAVE",
+  decimals: 18,
+  logo: "http://explorer.akave.ai/assets/configs/network_icon.svg",
 };
 
 // Provider component
@@ -74,8 +80,8 @@ export const Web3AuthProvider = ({ children }: { children: ReactNode }) => {
         });
 
         const web3authInstance = new Web3Auth({
-          clientId,
-          web3AuthNetwork: 'testnet', // Change to 'mainnet' for production
+          clientId:clientId,
+          web3AuthNetwork:  WEB3AUTH_NETWORK.SAPPHIRE_DEVNET, 
           chainConfig,
           privateKeyProvider,
         });
@@ -140,9 +146,11 @@ export const Web3AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       setIsLoading(true);
       const web3authProvider = await web3auth.connect();
+       console.log("web3authProvider")
       setProvider(web3authProvider);
       
       if (web3authProvider) {
+        console.log("Provider")
         const ethProvider = new ethers.providers.Web3Provider(web3authProvider as ethers.providers.ExternalProvider);
         setEthersProvider(ethProvider);
         

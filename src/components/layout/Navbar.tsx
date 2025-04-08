@@ -41,7 +41,7 @@ const Navbar: React.FC = () => {
                         Member
                       </span>
                     ) : (
-                      <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded-full">
+                      <span className="px-2 py-1 bg-red-100 text-red-800 rounded-full">
                         Not a Member
                       </span>
                     )}
@@ -56,19 +56,19 @@ const Navbar: React.FC = () => {
                     )}
                   </div>
                 </div>
-                <div className="text-sm text-gray-600 hidden md:block">
-                  {address && (
-                    <span>
-                      {address.substring(0, 6)}...{address.substring(address.length - 4)}
-                    </span>
-                  )}
-                </div>
-                <button
-                  onClick={logout}
-                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm"
-                >
-                  Disconnect
-                </button>
+                <div className="text-sm font-medium text-gray-700 hidden md:flex items-center bg-gradient-to-r from-blue-50 to-cyan-50 px-4 py-2 rounded-lg border border-blue-100 shadow-sm">
+  {address && (
+    <span>
+      {address.substring(0, 6)}...{address.substring(address.length - 4)}
+    </span>
+  )}
+</div>
+<button
+  onClick={logout}
+  className="flex items-center px-4 py-2 rounded-lg bg-gradient-to-r from-red-500 to-pink-500 text-white font-medium text-sm shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
+>
+  Disconnect
+</button>
               </>
             ) : (
               <button

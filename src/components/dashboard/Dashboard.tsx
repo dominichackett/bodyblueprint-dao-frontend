@@ -6,15 +6,15 @@ import { Proposal } from '../../contracts/HealthDAOGovernance';
 import { ArrowRight, ShieldCheck, Users, Award } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
-  const { isConnected, address, isMember, tokenBalance, healthDAO } = useWeb3Auth();
+  const { isConnected, address, isMember, tokenBalance, healthDAO,signer } = useWeb3Auth();
   const [recentProposals, setRecentProposals] = useState<Proposal[]>([]);
   const [minTokensForMembership, setMinTokensForMembership] = useState<ethers.BigNumber | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-
+console.log(signer)
   useEffect(() => {
     const fetchDashboardData = async () => {
       if (!healthDAO) return;
-      
+      console.log(healthDAO)
       try {
         setIsLoading(true);
         
@@ -128,143 +128,187 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
-      
-      {isLoading ? (
-        <div className="text-center py-8">
-          <p className="text-gray-600">Loading dashboard data...</p>
-        </div>
-      ) : (
-        <>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">Your Status</h2>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Address:</span>
-                  <span className="font-medium">
-                    {address?.substring(0, 8)}...{address?.substring(address.length - 6)}
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50 p-6">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-4xl font-bold text-blue-800 mb-8 border-b border-blue-200 pb-4">Dashboard</h1>
+        
+        {isLoading ? (
+          <div className="text-center py-12 bg-white rounded-xl shadow-md">
+            <div className="animate-pulse flex flex-col items-center">
+              <div className="h-8 w-8 mb-4 rounded-full bg-blue-200"></div>
+              <p className="text-gray-600 font-medium">Loading dashboard data...</p>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+              <div className="bg-white p-8 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl">
+                <h2 className="text-2xl font-bold text-blue-800 mb-6 flex items-center">
+                  <span className="inline-block w-8 h-8 bg-blue-100 rounded-full mr-3 flex items-center justify-center">
+                    <span className="text-blue-600">👤</span>
                   </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Membership Status:</span>
-                  {isMember ? (
-                    <span className="text-green-600 font-medium">Member</span>
-                  ) : (
-                    <span className="text-red-600 font-medium">Not a Member</span>
+                  Your Status
+                </h2>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center border-b border-gray-100 pb-3">
+                    <span className="text-gray-600 font-medium">Address:</span>
+                    <span className="font-medium bg-blue-50 py-1 px-3 rounded-lg text-blue-700">
+                      {address?.substring(0, 8)}...{address?.substring(address.length - 6)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center border-b border-gray-100 pb-3">
+                    <span className="text-gray-600 font-medium">Membership Status:</span>
+                    {isMember ? (
+                      <span className="bg-green-100 text-green-700 font-medium px-3 py-1 rounded-lg flex items-center">
+                        <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                        Member
+                      </span>
+                    ) : (
+                      <span className="bg-red-100 text-red-700 font-medium px-3 py-1 rounded-lg flex items-center">
+                        <span className="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
+                        Not a Member
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex justify-between items-center border-b border-gray-100 pb-3">
+                    <span className="text-gray-600 font-medium">Token Balance:</span>
+                    <span className="font-medium bg-blue-50 py-1 px-3 rounded-lg text-blue-700">
+                      {tokenBalance?.toString() || '0'} HDT
+                    </span>
+                  </div>
+                  {!isMember && minTokensForMembership && (
+                    <div className="mt-6 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border-l-4 border-yellow-400">
+                      <p className="text-yellow-800 text-sm flex items-center">
+                        <span className="mr-2">⚠️</span>
+                        You need at least {minTokensForMembership.toString()} HDT tokens to become a member.
+                      </p>
+                    </div>
                   )}
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Token Balance:</span>
-                  <span className="font-medium">{tokenBalance?.toString() || '0'} HDT</span>
-                </div>
-                {!isMember && minTokensForMembership && (
-                  <div className="mt-4 p-3 bg-yellow-50 rounded-md">
-                    <p className="text-yellow-700 text-sm">
-                      You need at least {minTokensForMembership.toString()} HDT tokens to become a member.
-                    </p>
+              </div>
+              
+              <div className="bg-white p-8 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl">
+                <h2 className="text-2xl font-bold text-blue-800 mb-6 flex items-center">
+                  <span className="inline-block w-8 h-8 bg-blue-100 rounded-full mr-3 flex items-center justify-center">
+                    <span className="text-blue-600">🏛️</span>
+                  </span>
+                  DAO Overview
+                </h2>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center border-b border-gray-100 pb-3">
+                    <span className="text-gray-600 font-medium">Total Proposals:</span>
+                    <span className="font-bold text-xl text-blue-700">{recentProposals.length}</span>
                   </div>
-                )}
-              </div>
-            </div>
-            
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">DAO Overview</h2>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Total Proposals:</span>
-                  <span className="font-medium">{recentProposals.length}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Membership Requirement:</span>
-                  <span className="font-medium">{minTokensForMembership?.toString() || '0'} HDT</span>
+                  <div className="flex justify-between items-center border-b border-gray-100 pb-3">
+                    <span className="text-gray-600 font-medium">Membership Requirement:</span>
+                    <span className="font-medium bg-blue-50 py-1 px-3 rounded-lg text-blue-700">
+                      {minTokensForMembership?.toString() || '0'} HDT
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          
-          <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-gray-800">Recent Proposals</h2>
-              <Link href="/proposals" className="text-mycolor-600 hover:text-indigo-800 text-sm font-medium">
-                View All
-              </Link>
-            </div>
             
-            {recentProposals.length > 0 ? (
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        ID
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Content CID
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Votes
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Price
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {recentProposals.map((proposal, index) => (
-                      <tr key={index} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          <Link href={`/proposals/${index + 1}`} className="text-mycolor-600 hover:text-indigo-900">
-                            #{index + 1}
-                          </Link>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {proposal.contentCID.substring(0, 10)}...
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm">
-                          {proposal.executed ? (
-                            <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
-                              Executed
-                            </span>
-                          ) : proposal.approved ? (
-                            <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-                              Approved
-                            </span>
-                          ) : (
-                            <span className="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                              Pending
-                            </span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {proposal.totalVotes.toString()}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {proposal.price.toString()} HDT
-                        </td>
+            <div className="bg-white p-8 rounded-xl shadow-lg mb-8">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-blue-800 flex items-center">
+                  <span className="inline-block w-8 h-8 bg-blue-100 rounded-full mr-3 flex items-center justify-center">
+                    <span className="text-blue-600">📑</span>
+                  </span>
+                  Recent Proposals
+                </h2>
+                <Link href="/proposals" className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                  View All
+                </Link>
+              </div>
+              
+              {recentProposals.length > 0 ? (
+                <div className="overflow-x-auto rounded-xl border border-gray-100">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gradient-to-r from-blue-50 to-cyan-50">
+                      <tr>
+                        <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-blue-700 uppercase tracking-wider">
+                          ID
+                        </th>
+                        <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-blue-700 uppercase tracking-wider">
+                          Content CID
+                        </th>
+                        <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-blue-700 uppercase tracking-wider">
+                          Status
+                        </th>
+                        <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-blue-700 uppercase tracking-wider">
+                          Votes
+                        </th>
+                        <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-blue-700 uppercase tracking-wider">
+                          Price
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ) : (
-              <p className="text-gray-500 text-center py-4">No proposals found.</p>
-            )}
-          </div>
-          
-          {isMember && (
-            <div className="flex justify-center">
-              <Link href="/proposals/create" className="bg-mycolor-600 hover:bg-mycolor-700 text-white px-6 py-3 rounded-md font-medium">
-                Create New Proposal
-              </Link>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-100">
+                      {recentProposals.map((proposal, index) => (
+                        <tr key={index} className="hover:bg-blue-50 transition-colors duration-150">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <Link href={`/proposals/${index + 1}`} className="text-blue-600 hover:text-blue-800 font-semibold">
+                              #{index + 1}
+                            </Link>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-medium">
+                            <span className="font-mono bg-gray-100 px-2 py-1 rounded text-xs">
+                              {proposal.contentCID.substring(0, 10)}...
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            {proposal.executed ? (
+                              <span className="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 flex items-center w-fit">
+                                <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                Executed
+                              </span>
+                            ) : proposal.approved ? (
+                              <span className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 flex items-center w-fit">
+                                <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                                Approved
+                              </span>
+                            ) : (
+                              <span className="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800 flex items-center w-fit">
+                                <span className="w-2 h-2 bg-yellow-500 rounded-full mr-2"></span>
+                                Pending
+                              </span>
+                            )}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">
+                            <span className="bg-blue-50 px-2 py-1 rounded">
+                              {proposal.totalVotes.toString()}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">
+                            <span className="bg-blue-50 px-2 py-1 rounded">
+                              {proposal.price.toString()} HDT
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="text-center py-12 bg-blue-50 rounded-lg">
+                  <p className="text-blue-700 font-medium">No proposals found.</p>
+                  <p className="text-gray-500 text-sm mt-2">Be the first to create a proposal!</p>
+                </div>
+              )}
             </div>
-          )}
-        </>
-      )}
+            
+            {isMember && (
+              <div className="flex justify-center">
+                <Link href="/proposals/create" className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-8 py-4 rounded-xl font-medium text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex items-center">
+                  <span className="mr-2">➕</span>
+                  Create New Proposal
+                </Link>
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 };
