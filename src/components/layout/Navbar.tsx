@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
                   Create Proposal
                 </Link>
               )}
-               <Link href="/" className="text-gray-700 hover:text-mycolor-600">
+               <Link href="/subscribe" className="text-gray-700 hover:text-mycolor-600">
                 Data Subscription
               </Link>
             </div>
