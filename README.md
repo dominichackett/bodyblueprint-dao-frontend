@@ -7,8 +7,10 @@ A Next.js frontend application for the HealthDAO platform, a decentralized auton
 - Web3Auth integration for wallet authentication
 - Dashboard to view DAO status and recent proposals
 - Create, view, and vote on proposals
+- Third party download of DAO data
 - Execute approved proposals
 - Responsive design with Tailwind CSS
+
 
 ## Tech Stack
 
