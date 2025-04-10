@@ -5,7 +5,6 @@ import { HealthDAOStorage } from '../../contracts/StorageContract';
 import { Clock, Download } from 'lucide-react';
 
 
-
 const storageAddress = process.env.NEXT_PUBLIC_STORAGE_ADDRESS
 
 const SubscriptionManager = () => {
@@ -19,7 +18,7 @@ const SubscriptionManager = () => {
   const [isApproving, setIsApproving] = useState<boolean>(false);
   const [isSubscribing, setIsSubscribing] = useState<boolean>(false);
   const [transactionHash, setTransactionHash] = useState<string>('');
-
+  const [isDownloading,setIsDownLoading] = useState(false)
   useEffect(() => {
     if (signer && storageAddress) {
       // Initialize the HealthDAOStorage contract
@@ -93,23 +92,73 @@ const SubscriptionManager = () => {
     }
   };
 
-  const handleDownload = () => {
-    // Dummy download function
-    alert('Downloading content...');
-    
-    // Simulate download by creating a dummy text file
-    const element = document.createElement('a');
-    const file = new Blob(['This is your downloaded content from HealthDAO'], { type: 'text/plain' });
-    element.href = URL.createObjectURL(file);
-    element.download = 'healthdao-content.txt';
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
+  const handleDownload = async () => {
+    try {
+
+      setIsDownLoading(true)
+      // Create message object
+      const messageObj = { message: "Body Blue Print DAO", date: new Date().toString() };
+      const messageString = JSON.stringify(messageObj);
+      
+      // Sign the message
+      const signature = await signer?.signMessage(messageString);
+      
+      // Verify the signature (optional, for debugging)
+      const recoveredAddress = ethers.utils.verifyMessage(messageString, signature);
+      console.log("Recovered Address: ", recoveredAddress);
+      console.log("Signature: ", signature);
+      
+      // Get API URL from environment variable
+      const apiUrl = process.env.NEXT_PUBLIC_AKAVE_GATEWAY || '';
+      const url = `${apiUrl}/api/getzippeddata`;
+      
+      console.log("Posting to URL:", url);
+      
+      // Use fetch with POST method and body data
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: messageString,
+          signature: signature
+        })
+      });
+      
+      // Check if the response is successful
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `Server responded with status ${response.status}`);
+      }
+      
+      // Convert the response to a blob
+      const blob = await response.blob();
+      
+      // Create a download link and trigger the download
+      const downloadUrl = URL.createObjectURL(blob);
+      const element = document.createElement('a');
+      element.href = downloadUrl;
+      element.download = "bodyblueprintdao-files.zip";
+      document.body.appendChild(element);
+      element.click();
+      
+      // Clean up
+      document.body.removeChild(element);
+      URL.revokeObjectURL(downloadUrl);
+      
+      console.log("Download initiated successfully");
+    } catch (error) {
+      console.error("Download failed:", error);
+      alert(`Download failed: ${error.message}`);
+    }finally{
+      setIsDownLoading(false)
+    }
   };
 
   if (!isConnected) {
     return (
-      <div className="bg-white rounded-xl shadow-md p-6">
+      <div className="bg-white rounded-xl shadow-md p-6 mt-8">
         <h2 className="text-xl font-bold text-blue-800 mb-4">Body Blue Print Subscription</h2>
         <p className="text-gray-600">Connect your wallet to view subscription details.</p>
       </div>
@@ -118,7 +167,7 @@ const SubscriptionManager = () => {
 
   if (isLoading) {
     return (
-      <div className="bg-white rounded-xl shadow-md p-6">
+      <div className="bg-white rounded-xl shadow-md p-6 mt-8">
         <div className="animate-pulse flex flex-col items-center py-4">
           <div className="h-8 w-8 mb-4 rounded-full bg-blue-200"></div>
           <p className="text-gray-600 font-medium">Loading subscription data...</p>
@@ -193,10 +242,11 @@ const SubscriptionManager = () => {
           <div className="mt-6">
             <button 
               onClick={handleDownload}
-              className="w-full py-3 bg-gradient-to-r from-green-600 to-emerald-500 hover:shadow-lg text-white rounded-lg font-medium transition-all duration-300 flex items-center justify-center"
+              disabled={isDownloading}
+              className={`w-full py-3 ${isDownloading ? 'bg-gray-400': 'bg-gradient-to-r from-green-600 to-emerald-500 hover:shadow-lg'} text-white rounded-lg font-medium transition-all duration-300 flex items-center justify-center`}
             >
               <Download className="h-5 w-5 mr-2" />
-              Download Premium Content
+             {isDownloading ?"Downloading Files": "Download Premium Content"}
             </button>
           </div>
         )}
