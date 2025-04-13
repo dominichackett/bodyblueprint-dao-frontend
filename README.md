@@ -38,9 +38,9 @@ https://github.com/dominichackett/bodyblueprint-dao-frontend/blob/7b8f643cb2fcad
 https://github.com/dominichackett/akaveserver/blob/main/server.js
 
 
-## Getting Started
+## Screen Shots
 ### Home Page
-https://github.com/dominichackett/bodyblueprint-dao-frontend/blob/master/public/index.png
+(https://github.com/dominichackett/bodyblueprint-dao-frontend/blob/master/public/index.png)
 
 ## Getting Started
 
