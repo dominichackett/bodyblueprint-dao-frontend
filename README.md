@@ -40,7 +40,7 @@ https://github.com/dominichackett/akaveserver/blob/main/server.js
 
 ## Screen Shots
 ### Home Page
-(https://github.com/dominichackett/bodyblueprint-dao-frontend/blob/master/public/index.png)
+![Home Page](https://github.com/dominichackett/bodyblueprint-dao-frontend/blob/master/public/index.png)
 
 ## Getting Started
 
