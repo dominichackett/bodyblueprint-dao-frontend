@@ -39,6 +39,10 @@ https://github.com/dominichackett/akaveserver/blob/main/server.js
 
 
 ## Getting Started
+### Home Page
+https://github.com/dominichackett/bodyblueprint-dao-frontend/blob/master/public/index.png
+
+## Getting Started
 
 1. Clone the repository:
 
