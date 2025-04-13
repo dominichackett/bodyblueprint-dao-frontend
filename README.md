@@ -27,6 +27,17 @@ A Next.js frontend application for the HealthDAO platform, a decentralized auton
 - MetaMask or another Web3 wallet
 - Access to the HealthDAOGovernance smart contract
 
+# Akave Storage Integration
+
+## Check Relay Server to AKAVE Link to download content if user has access
+https://github.com/dominichackett/bodyblueprint-dao-frontend/blob/7b8f643cb2fcad8c4de67d04832f778522a1d5ef/src/components/subscription/subscribe.tsx#L112-L127
+
+
+## Relay Server to AKAVE Link
+
+https://github.com/dominichackett/akaveserver/blob/main/server.js
+
+
 ## Getting Started
 
 1. Clone the repository:
