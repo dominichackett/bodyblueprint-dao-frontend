@@ -39,8 +39,22 @@ https://github.com/dominichackett/akaveserver/blob/main/server.js
 
 
 ## Screen Shots
+
 ### Home Page
 ![Home Page](https://github.com/dominichackett/bodyblueprint-dao-frontend/blob/master/public/index.png)
+
+### Dashboard
+![Dashboard](https://github.com/dominichackett/bodyblueprint-dao-frontend/blob/master/public/dashboard.png)
+
+### Proposals
+![Proposals](https://github.com/dominichackett/bodyblueprint-dao-frontend/blob/master/public/proposals.png)
+
+### Create Proposal
+![Create Proposal](https://github.com/dominichackett/bodyblueprint-dao-frontend/blob/master/public/createproposal.png)
+
+### Data Downloads
+![Home Page](https://github.com/dominichackett/bodyblueprint-dao-frontend/blob/master/public/subscribe.png)
+
 
 ## Getting Started
 
