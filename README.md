@@ -38,8 +38,7 @@ https://github.com/dominichackett/bodyblueprint-dao-frontend/blob/7b8f643cb2fcad
 https://github.com/dominichackett/akaveserver/blob/main/server.js
 
 ## Body Blue Print DAO FrontEnd Video
-![Youtube Video](https://github.com/dominichackett/bodyblueprint-dao-frontend/blob/master/public/index.png)https://youtu.be/DLZ6RX2oDtE
-
+[![Watch the video](https://img.youtube.com/vi/DLZ6RX2oDtE/maxresdefault.jpg)](https://youtu.be/DLZ6RX2oDtE)
 
 ## Screen Shots
 
